@@ -1,0 +1,33 @@
+{
+  "id": "./",
+  "name": "NL Trả Góp Công Nghiệp — Đề xuất đầu tư điện mặt trời hệ công nghiệp",
+  "short_name": "NL Trả Góp CN",
+  "description": "Lập đề xuất đầu tư điện mặt trời hệ công nghiệp, trả góp Quỹ Stride hoặc trả thẳng — Công ty Cổ phần Ngọc Long Energy",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b2e59",
+  "theme_color": "#0b5ed7",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-any.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
