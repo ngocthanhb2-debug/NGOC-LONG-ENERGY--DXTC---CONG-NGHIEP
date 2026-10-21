@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Trả Góp Công Nghiệp</title>
+<meta name="nd-version" content="2026.10.21.2">
 <style>
 :root{--forest:#1B4332;--forest2:#2D6A4F;--sun:#E8710A;--stride:#1D6FE0;--ink:#1d2b24;--soft:#6b7a72;--line:#dfe6e1;--bg:#f4f7f5;--card:#fff;--ok:#1B7A4A;--warn:#b26a00;--bad:#b3261e}
 *{box-sizing:border-box}
@@ -101,7 +103,7 @@ td input{padding:6px 7px;font-size:13px}
 #nlHome .home-tile.moi .sub{color:var(--soft);opacity:1;}
 #nlHome .home-tile.moi:hover{background:#f1f6ff;}
 @media (min-width:720px){
-  #nlHome .home-tile{flex:0 0 calc((100% - 24px) / 3);}
+  #nlHome .home-tile{flex:0 0 calc((100% - 36px) / 4);}
   #nlHome .home-tile.moi{flex:0 0 calc((100% - 12px) / 2);}
 }
 #nlHome .home-tile .bd{position:absolute;top:10px;right:12px;background:#ffa726;color:#3b2500;border-radius:999px;font:800 11px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:3px 7px;}
@@ -111,8 +113,26 @@ td input{padding:6px 7px;font-size:13px}
 #nlHome .home-zalo[hidden]{display:none;}
 #nlHome .home-foot{text-align:center;font-size:11.8px;opacity:.85;margin-top:18px;line-height:1.7;}
 #nlHome .home-foot button{background:none;border:0;color:#fff;text-decoration:underline;font:inherit;cursor:pointer;padding:0 4px;}
+#nlHome .home-nhom{text-align:center;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.75;margin:20px 0 10px;}
 #nlHome .home-vao{display:block;margin:14px auto 0;background:none;border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:999px;padding:8px 18px;font:600 13px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;cursor:pointer;}
+/* Hồ sơ khách */
+.hs-loc{margin:10px 0 8px}
+.hs-loc .chip b{display:inline}.hs-loc .chip small{display:inline;margin-left:4px;opacity:.8}
+.hs-tk{width:100%;box-sizing:border-box;margin:0 0 6px}
+.hs-tag{display:inline-block;border-radius:999px;padding:2px 9px;font:700 11px/1.4 system-ui,sans-serif;color:#fff;margin-right:6px;vertical-align:1px}
+.hs-tag.g7{background:#0b5ed7}.hs-tag.g5{background:#1B4332}.hs-tag.tt{background:#e08a00}
+.hs-row{align-items:center}.hs-row .btns-r{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+nav button.luu{background:#ffa726;border-color:#ffa726;color:#3b2500;font-weight:700}
 /* Thanh cập nhật */
+#nlCapNhat{position:fixed;left:0;right:0;top:0;z-index:58;background:#ffa726;color:#3b2500;display:flex;flex-wrap:wrap;line-height:1.4;gap:8px 10px;align-items:center;justify-content:center;padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px;font:600 13px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;}
+#nlCapNhat[hidden]{display:none;}
+#nlCapNhat button{background:#3b2500;color:#fff;border:0;border-radius:999px;padding:6px 14px;font:700 12.5px system-ui,sans-serif;cursor:pointer;}
+#nlCapNhat .x{background:none;color:#3b2500;font-size:16px;padding:2px 8px;}
+.hd-pane[hidden]{display:none;}
+.hd-pane h3{margin:16px 0 6px;font-size:15px;color:var(--forest);}
+.hd-pane ol,.hd-pane ul{margin:6px 0 10px;padding-left:20px;line-height:1.6;}
+.hd-pane li{margin-bottom:4px;}
+.hd-note{background:#fff6e0;color:#5b3b00;border-radius:10px;padding:9px 12px;font-size:13px;line-height:1.5;margin:10px 0;}
 
 #nlHome[hidden]{display:none;}
 #nlHome .brand-logo--stride{height:auto;width:auto;max-height:40px;border-radius:7px;background:#fff;padding:5px 8px;object-fit:contain;box-shadow:none;}
@@ -126,17 +146,20 @@ td input{padding:6px 7px;font-size:13px}
 <meta name="theme-color" content="#0b5ed7">
 </head>
 <body>
+<div id="nlCapNhat" hidden role="status"><span id="nlCapNhatTx">Có phiên bản mới.</span><button type="button" id="nlCapNhatTai">Tải lại</button><button type="button" class="x" id="nlCapNhatDong" aria-label="Đóng">×</button></div>
 <header>
   <div class="brand">NGỌC LONG ENERGY × STRIDE<small>Trả góp hệ công nghiệp</small></div>
-  <div class="ver">Phiên bản <span id="verTxt">2026.10.20.1</span></div>
+  <div class="ver">Phiên bản <span id="verTxt">2026.10.21.2</span></div>
 </header>
 <nav class="noprint">
   <button data-home="1">⌂ Trang chủ</button>
+  <button type="button" id="btnLuuNav" class="luu">💾 Lưu hồ sơ</button>
   <button data-go="s1" class="on">1 · Khách hàng</button>
   <button data-go="s2">2 · Điện &amp; cấu hình</button>
   <button data-go="s3">3 · Phương án</button>
   <button data-go="s4">4 · Kiểm tra &amp; xuất</button>
   <button data-go="sHoSo">Hồ sơ khách</button>
+  <button data-go="sHuongDan">Hướng dẫn</button>
   <button data-go="sCaiDat">Cài đặt</button>
 </nav>
 <main class="noprint">
@@ -333,10 +356,70 @@ td input{padding:6px 7px;font-size:13px}
     <h2>Hồ sơ khách</h2>
     <p class="hint">Lưu trên trình duyệt này. Nên xuất file .json để sao lưu.</p>
     <div class="btns" style="margin-top:0"><button class="btn small" id="btnXuatJson">Xuất file sao lưu (.json)</button><label class="btn ghost small" style="display:inline-block;cursor:pointer;margin:0">Nhập file (.json)<input type="file" id="fileNhap" accept=".json" hidden></label></div>
-    <div id="hsDs" style="margin-top:12px"></div>
+    <div class="chips hs-loc" id="hsLoc"></div>
+    <input class="hs-tk" id="hsTk" type="search" placeholder="Tìm theo tên khách hoặc dự án">
+    <div id="hsDs" style="margin-top:6px"></div>
   </div>
 </section>
 
+<section class="step" id="sHuongDan">
+  <div class="card">
+    <h2>Hướng dẫn sử dụng</h2>
+    <div class="chips" id="hdTabs" style="margin-bottom:12px">
+      <div class="chip on" data-hd="qt"><b>Quy trình</b><small>4 bước lập đề xuất</small></div>
+      <div class="chip" data-hd="ct"><b>Cách nhập &amp; công thức</b><small>Điện, giờ nắng, tiết kiệm</small></div>
+      <div class="chip" data-hd="cm"><b>Cài lên màn hình</b><small>Android, iPhone, máy tính</small></div>
+    </div>
+    <div class="hd-pane" data-hd="qt">
+      <ol>
+        <li><b>Trang chủ:</b> chọn "Báo giá trả góp mới" hoặc "Báo giá trả thẳng mới". Báo giá đang nhập dở sẽ có ô "Tiếp tục báo giá". Hồ sơ đã lưu nằm ở "Hồ sơ khách".</li>
+        <li><b>Bước 1 · Khách hàng:</b> nhập tên khách, dự án, địa chỉ, vị trí lắp đặt, diện tích và khu vực. Chọn khu vực sẽ tự điền giờ nắng đỉnh mặc định.</li>
+        <li><b>Bước 2 · Điện &amp; cấu hình:</b> nhập tiền điện trung bình tháng (đã gồm VAT). Chọn loại điện, cấp điện áp và nhịp vận hành để app tự tính giá bình quân. Nhập giờ nắng đỉnh và tỷ lệ điện dùng ban ngày. App đề xuất tấm pin, biến tần và dung lượng lưu trữ; bạn có thể sửa tay từng ô.</li>
+        <li><b>Bước 3 · Phương án:</b> nhập tổng giá trị dự án, chọn trả góp Quỹ Stride (Gói 5 hoặc Gói 7 năm) hoặc trả thẳng. Xem tổng mức đầu tư, trả góp hàng tháng, dòng tiền theo năm và mức đầu tư tối đa gợi ý.</li>
+        <li><b>Bước 4 · Kiểm tra &amp; xuất:</b> đọc các cảnh báo, rồi xuất PDF đề xuất hoặc đơn đề nghị. Nên lưu hồ sơ khách trước khi gửi.</li>
+      </ol>
+      <div class="hd-note">Số liệu đang nhập được tự lưu nháp trên máy này. Dữ liệu nằm trong trình duyệt của từng máy, nên đổi máy hoặc xóa dữ liệu trình duyệt sẽ mất.</div>
+    </div>
+    <div class="hd-pane" data-hd="ct" hidden>
+      <h3>Điện tiêu thụ và giá bình quân</h3>
+      <ul>
+        <li>Điện tiêu thụ (kWh/tháng) = tiền điện ÷ giá điện bình quân. Mỗi ngày = kWh/tháng ÷ 30.</li>
+        <li>Giá bình quân (đã gồm VAT 8%) tự tính theo biểu giá và tỷ trọng giờ bình thường, cao điểm, thấp điểm của nhịp vận hành. Gõ vào ô giá để dùng giá khác, bấm nút đặt lại để quay về giá theo nhịp.</li>
+      </ul>
+      <h3>Giờ nắng đỉnh và tỷ lệ ban ngày</h3>
+      <ul>
+        <li>Giờ nắng đỉnh nhập tay trong khoảng 2–6 giờ. Mặc định theo khu vực: Miền Bắc 3, Miền Trung 4, Miền Nam 4,5.</li>
+        <li>Tỷ lệ điện dùng ban ngày được gợi ý bằng tỷ lệ giờ bình thường của nhịp (hành chính 75%, hai ca 69%, ba ca 57%). Gõ tay thì app giữ số bạn nhập; bấm "Dùng gợi ý" để quay lại.</li>
+      </ul>
+      <h3>Công suất đề xuất</h3>
+      <ul>
+        <li>Tấm pin (kWp) = (điện ban ngày + điện nạp vào pin) ÷ (giờ nắng đỉnh × hiệu suất hệ thống). Hiệu suất hệ thống và các hệ số khác chỉnh ở mục Cài đặt.</li>
+        <li>Dung lượng lưu trữ tính theo khung giờ sạc/xả, độ sâu xả và suy hao đã cài. Cảnh báo hiện ra nếu số chu kỳ mỗi ngày vượt mức bảo hành.</li>
+      </ul>
+      <h3>Tiết kiệm và dòng tiền</h3>
+      <ul>
+        <li>Tiết kiệm tháng = điện mặt trời dùng trực tiếp × giá điện + phần pin xả giờ cao điểm × (giá cao điểm − giá bình quân) × 30.</li>
+        <li>Dòng tiền năm 1 đến năm 3 không trừ bảo trì; từ năm 4 trừ bảo trì. Giá điện tăng 3% mỗi năm, sản lượng pin suy giảm 1,17% mỗi năm.</li>
+        <li>"Mức gợi ý tối đa" là tổng mức đầu tư lớn nhất để dòng tiền năm 1 không âm; đơn giá/kWp = mức đó ÷ công suất tấm pin.</li>
+      </ul>
+      <h3>Phương án tài chính</h3>
+      <ul>
+        <li>Gói 5 năm: vốn đối ứng 30% tổng giá trị. Gói 7 năm: không yêu cầu vốn đối ứng.</li>
+        <li>Phí một lần 3% tính trên số tiền giải ngân (trả thẳng tính trên toàn dự án). Khi khuyến mãi bật thì được miễn, áp dụng cho Gói 7 năm và trả thẳng.</li>
+        <li>Phí hàng tháng và bảo trì theo từng năm có thể sửa tay ở bước 3; ô đã sửa được đánh dấu.</li>
+      </ul>
+    </div>
+    <div class="hd-pane" data-hd="cm" hidden>
+      <h3>Android (Chrome)</h3>
+      <ol><li>Mở liên kết ứng dụng bằng Chrome.</li><li>Bấm dấu ⋮ ở góc trên bên phải.</li><li>Chọn "Cài đặt ứng dụng" hoặc "Thêm vào màn hình chính".</li></ol>
+      <h3>iPhone (Safari)</h3>
+      <ol><li>Mở liên kết bằng Safari (không dùng trình duyệt trong Zalo).</li><li>Bấm nút Chia sẻ ở thanh dưới.</li><li>Chọn "Thêm vào MH chính".</li></ol>
+      <h3>Máy tính (Chrome hoặc Edge)</h3>
+      <ol><li>Mở liên kết ứng dụng.</li><li>Bấm biểu tượng cài đặt ở cuối thanh địa chỉ, chọn "Cài đặt".</li></ol>
+      <div class="hd-note">Nếu mở trong Zalo, bấm dấu ⋯ ở góc trên, chọn "Mở bằng trình duyệt" rồi mới cài và tải PDF.</div>
+    </div>
+  </div>
+</section>
 <section class="step" id="sCaiDat">
   <div class="card">
     <h2>Cài đặt quản lý</h2>
@@ -375,6 +458,9 @@ td input{padding:6px 7px;font-size:13px}
     </div>
     <div class="btns"><button class="btn" id="btnLuuCaiDat">Lưu cài đặt</button><button class="btn ghost" id="btnMacDinh">Khôi phục mặc định</button></div>
     <div id="cdThongBao" class="muted" style="margin-top:8px"></div>
+    <h3 style="margin:20px 0 6px">Ứng dụng</h3>
+    <div class="muted">Phiên bản đang dùng: <b id="cdVer"></b> · <span id="cdCapNhatTt">Chưa kiểm tra</span></div>
+    <div class="btns"><button class="btn ghost" id="btnKtCapNhat">Kiểm tra cập nhật</button><button class="btn ghost" id="btnChiaSe">Chia sẻ ứng dụng</button></div>
   </div>
 </section>
 
@@ -2194,7 +2280,8 @@ var PdfGen = (function () {
 <script>
 (function(){
 'use strict';
-var VER = '2026.10.20.1';
+var VER = (function(){ var m = document.querySelector('meta[name="nd-version"]'); return m ? m.content : '2026.10.21.2'; })();
+var APP_URL = 'https://ngocthanhb2-debug.github.io/NGOC-LONG-ENERGY--DXTC---CONG-NGHIEP/';
 var $ = function(id){ return document.getElementById(id); };
 var LS = {
   get: function(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } },
@@ -2707,13 +2794,13 @@ document.addEventListener('click', function(e){
   if (go) { showStep(go.getAttribute('data-go')); return; }
 });
 function showStep(id){
-  var ids = ['s1','s2','s3','s4','sHoSo','sCaiDat'];
+  var ids = ['s1','s2','s3','s4','sHoSo','sHuongDan','sCaiDat'];
   ids.forEach(function(x){ $(x).classList.toggle('on', x===id); });
   Array.prototype.forEach.call(document.querySelectorAll('nav button'), function(b){
     b.classList.toggle('on', b.getAttribute('data-go')===id);
   });
   if (id==='sHoSo') renderHoSo();
-  if (id==='sCaiDat') renderCaiDat();
+  if (id==='sCaiDat') { renderCaiDat(); $('cdVer').textContent = VER; }
   if (id==='s4') { update(); }
   window.scrollTo(0,0);
 }
@@ -2885,29 +2972,59 @@ $('bkBody').addEventListener('click', function(e){
 /* ---------- Hồ sơ ---------- */
 function hoSoList(){ var o = LS.get('cn_ho_so_v1'); return (o && Array.isArray(o.ds)) ? o.ds : []; }
 function saveHoSoList(ds){ return LS.set('cn_ho_so_v1', {v:1, ds:ds.slice(0,100)}); }
+var hsId = null, hsLoc = 'all';
+function loaiHoSo(snap){
+  if (!snap) return 'g5';
+  if (snap.ht === 'tra_thang') return 'tt';
+  return snap.goi === '7' ? 'g7' : 'g5';
+}
+var NHAN_HS = {g7:'Gói 7 năm', g5:'Gói 5 năm', tt:'Trả thẳng'};
 function luuHoSo(){
   var s = read();
   var ten = (s.khach||'Chưa đặt tên') + (s.duAn ? ' — '+s.duAn : '');
-  var ds = hoSoList();
-  ds.unshift({id: Date.now().toString(36), ten: ten, t: new Date().toISOString(), snap: snapshot()});
-  if (saveHoSoList(ds)) $('thongBaoXuat').textContent = 'Đã lưu vào Hồ sơ khách.';
+  var ds = hoSoList(), snap = snapshot(), loai = loaiHoSo(snap);
+  var i = -1; if (hsId) ds.forEach(function(x, k){ if (x.id === hsId) i = k; });
+  var mess;
+  if (i >= 0) { var x = ds.splice(i,1)[0]; x.ten = ten; x.t = new Date().toISOString(); x.snap = snap; x.loai = loai; ds.unshift(x); mess = 'Đã cập nhật hồ sơ "' + ten + '" (' + NHAN_HS[loai] + ').'; }
+  else { hsId = Date.now().toString(36); ds.unshift({id: hsId, ten: ten, t: new Date().toISOString(), loai: loai, snap: snap}); mess = 'Đã lưu hồ sơ "' + ten + '" vào mục ' + NHAN_HS[loai] + '.'; }
+  if (saveHoSoList(ds)) { var tb = $('thongBaoXuat'); if (tb) tb.textContent = mess; toast(mess); }
   else toast('Không lưu được (trình duyệt chặn bộ nhớ)');
 }
 $('btnLuuHoSo').addEventListener('click', luuHoSo);
+$('btnLuuNav').addEventListener('click', luuHoSo);
 function renderHoSo(){
-  var ds = hoSoList();
-  $('hsDs').innerHTML = ds.length ? ds.map(function(x,i){
+  var all = hoSoList(), dem = {all: all.length, g7:0, g5:0, tt:0};
+  all.forEach(function(x){ dem[x.loai || loaiHoSo(x.snap)]++; });
+  $('hsLoc').innerHTML = [['all','Tất cả'],['g7','Gói 7 năm'],['g5','Gói 5 năm'],['tt','Trả thẳng']].map(function(p){
+    return '<div class="chip' + (hsLoc===p[0] ? ' on' : '') + '" data-loc="' + p[0] + '"><b>' + p[1] + '</b><small>' + dem[p[0]] + '</small></div>';
+  }).join('');
+  var q = ($('hsTk').value || '').trim().toLowerCase();
+  var rows = [];
+  all.forEach(function(x, i){
+    var l = x.loai || loaiHoSo(x.snap);
+    if (hsLoc !== 'all' && l !== hsLoc) return;
+    if (q && String(x.ten).toLowerCase().indexOf(q) < 0) return;
     var d = new Date(x.t);
-    var nhan = (x.snap && x.snap.ht==='tra_thang') ? 'TRẢ THẲNG' : ('TRẢ GÓP ' + (x.snap && x.snap.goi==='7' ? '7 NĂM' : '5 NĂM'));
-    return '<div class="row"><span><b>'+esc(x.ten)+'</b><br><span class="muted">'+nhan+' · '+esc(d.toLocaleString('vi-VN'))+'</span></span>' +
-      '<span><button class="btn small" data-mo="'+i+'">Mở</button> <button class="btn ghost small" data-xoa="'+i+'">Xoá</button></span></div>';
-  }).join('') : '<p class="muted">Chưa có hồ sơ nào.</p>';
+    rows.push('<div class="row hs-row"><span><span class="hs-tag ' + l + '">' + NHAN_HS[l] + '</span><b>' + esc(x.ten) + '</b><br><span class="muted">' + esc(d.toLocaleString('vi-VN')) + (x.id === hsId ? ' · đang mở' : '') + '</span></span>' +
+      '<span class="btns-r"><button class="btn small" data-mo="' + i + '">Mở</button><button class="btn ghost small" data-nb="' + i + '">Nhân bản</button><button class="btn ghost small" data-xoa="' + i + '">Xoá</button></span></div>');
+  });
+  $('hsDs').innerHTML = rows.length ? rows.join('') : '<p class="muted">' + (all.length ? 'Không có hồ sơ nào trong mục này.' : 'Chưa có hồ sơ nào. Bấm "Lưu hồ sơ" trên thanh trên cùng để lưu báo giá đang làm.') + '</p>';
 }
+$('hsLoc').addEventListener('click', function(e){
+  var c = e.target.closest('.chip'); if (!c) return;
+  hsLoc = c.getAttribute('data-loc'); renderHoSo();
+});
+$('hsTk').addEventListener('input', renderHoSo);
 $('hsDs').addEventListener('click', function(e){
-  var m = e.target.getAttribute('data-mo'), x = e.target.getAttribute('data-xoa');
+  var t = e.target.closest('button'); if (!t) return;
+  var m = t.getAttribute('data-mo'), x = t.getAttribute('data-xoa'), nb = t.getAttribute('data-nb');
   var ds = hoSoList();
-  if (m!==null && ds[Number(m)]) { applySnapshot(ds[Number(m)].snap); update(); showStep('s1'); toast('Đã mở hồ sơ'); }
-  if (x!==null && ds[Number(x)] && confirm('Xoá hồ sơ này?')) { ds.splice(Number(x),1); saveHoSoList(ds); renderHoSo(); }
+  if (m!==null && ds[Number(m)]) { applySnapshot(ds[Number(m)].snap); hsId = ds[Number(m)].id; update(); showStep('s1'); toast('Đã mở hồ sơ'); }
+  if (nb!==null && ds[Number(nb)]) {
+    var g = ds[Number(nb)], c = {id: Date.now().toString(36), ten: g.ten + ' (bản sao)', t: new Date().toISOString(), loai: g.loai || loaiHoSo(g.snap), snap: JSON.parse(JSON.stringify(g.snap))};
+    ds.unshift(c); saveHoSoList(ds); renderHoSo(); toast('Đã nhân bản hồ sơ');
+  }
+  if (x!==null && ds[Number(x)] && confirm('Xoá hồ sơ này?')) { if (ds[Number(x)].id === hsId) hsId = null; ds.splice(Number(x),1); saveHoSoList(ds); renderHoSo(); }
 });
 $('btnXuatJson').addEventListener('click', function(){
   var blob = new Blob([JSON.stringify({v:1, loai:'ho_so', ds:hoSoList()}, null, 2)], {type:'application/json'});
@@ -2923,7 +3040,7 @@ $('fileNhap').addEventListener('change', function(){
       var o = JSON.parse(r.result);
       if (!o || o.v!==1 || !Array.isArray(o.ds)) throw new Error('bad');
       var ds = hoSoList();
-      o.ds.forEach(function(x){ if (x && x.snap) ds.unshift({id:String(x.id||Date.now()), ten:String(x.ten||'Hồ sơ'), t:String(x.t||new Date().toISOString()), snap:x.snap}); });
+      o.ds.forEach(function(x){ if (x && x.snap) ds.unshift({id:String(x.id||Date.now()), ten:String(x.ten||'Hồ sơ'), t:String(x.t||new Date().toISOString()), loai:loaiHoSo(x.snap), snap:x.snap}); });
       saveHoSoList(ds); renderHoSo(); toast('Đã nhập '+o.ds.length+' hồ sơ');
     } catch(e){ toast('File không đúng định dạng hồ sơ'); }
   };
@@ -3012,6 +3129,7 @@ $('btnMacDinh').addEventListener('click', function(){
 function khachMoi(ht){
   var dangNhap = ($('khach').value.trim() || $('tongGiaTri').value.trim());
   if (dangNhap && !confirm('Bắt đầu báo giá khách mới? Số liệu đang nhập trên màn hình sẽ bị xoá (hồ sơ đã lưu vẫn giữ).')) return false;
+  hsId = null;
   var ids = {}; DRAFT_IDS.forEach(function(id){ ids[id] = ''; });
   ids.soDon = '01'; ids.khuVuc = $('khuVuc').value; ids.kmMode = 'auto';
   applySnapshot({ids: ids, mo: 'hybrid', ht: ht, goi: '5', manual: {}, bangKe: [], loai: 'kinhdoanh', cap: 'duoi6', nhip: 'hanhchinh', giaTay: false, tyLeTay: false, khung: 'cu', soChu: 2});
@@ -3031,16 +3149,24 @@ function xayTrangChu(){
     'banknote': '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 12h.01M18 12h.01"/>',
     'folder': '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
     'sliders': '<path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11M21 18h-1"/><circle cx="16" cy="6" r="2.2"/><circle cx="10" cy="12" r="2.2"/><circle cx="18" cy="18" r="2.2"/>',
-    'play': '<circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4z"/>'
+    'play': '<circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4z"/>',
+    'help': '<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-2.9 2.4-2.9 4.4"/><path d="M12 17.8h.01"/>',
+    'share': '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>'
   };
   function svg(ten){ return '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICOS[ten] || '') + '</svg>'; }
   function logo(key){ return PdfGen.anhLogo(key); }
   var tiles = [
-    {act:'moi-gop', ic:'file-plus', moi:true, ten:'Báo giá trả góp mới', sub:'Khách mới · Quỹ Stride · Gói 5 hoặc 7 năm'},
-    {act:'moi-thang', ic:'banknote', moi:true, ten:'Báo giá trả thẳng mới', sub:'Khách mới · thanh toán theo đợt'},
-    {act:'hoso', ic:'folder', ten:'Hồ sơ khách', sub:'Lưu, mở, nhân bản hồ sơ đã lưu'},
-    {act:'caidat', ic:'sliders', ten:'Cài đặt', sub:'Công ty, giờ nắng, hệ số, bảo trì'}
+    {act:'hoso', ic:'folder', ten:'Hồ sơ khách', sub:'Gói 7 năm, gói 5 năm, trả thẳng'},
+    {act:'caidat', ic:'sliders', ten:'Cài đặt', sub:'Công ty, hệ số, bảo trì, phiên bản'},
+    {act:'huongdan', ic:'help', ten:'Hướng dẫn', sub:'Quy trình, công thức, cài lên màn hình'},
+    {act:'chiase', ic:'share', ten:'Chia sẻ ứng dụng', sub:'Gửi liên kết cho đồng nghiệp'}
   ];
+  var chinh = [
+    {act:'moi-gop', ic:'file-plus', ten:'Báo giá TRẢ GÓP mới', sub:'Quỹ Stride · Gói 5 hoặc 7 năm'},
+    {act:'moi-thang', ic:'banknote', ten:'Báo giá TRẢ THẲNG mới', sub:'Thanh toán theo đợt'}
+  ];
+  function nut(t, moi){ return '<button type="button" class="home-tile' + (moi ? ' moi' : '') + '" data-act="' + t.act + '"><span class="ic">' + svg(t.ic) + '</span><span class="tx"><span class="nm">' + t.ten + '</span><span class="sub">' + t.sub + '</span></span></button>'; }
+  var soHs = 0; try { soHs = hoSoList().length; } catch (e) {}
   var nhap = null; try { nhap = LS.get('cn_ban_nhap_v1'); } catch (e) { nhap = null; }
   var tiep = (nhap && nhap.ids && (nhap.ids.khach || nhap.ids.tongGiaTri))
     ? '<button type="button" class="home-tiep" data-act="tiep"><span class="ic">' + svg('play') + '</span><span class="tx"><b>Tiếp tục báo giá</b><span>' + esc(nhap.ids.khach || 'Báo giá đang nhập') + ' · lưu trên máy này</span></span></button>'
@@ -3054,16 +3180,17 @@ function xayTrangChu(){
     '<h1>Đề xuất đầu tư điện mặt trời</h1>' +
     '<p class="home-sub">Hệ công nghiệp · Trả góp Quỹ Stride hoặc trả thẳng</p>' +
     tiep +
-    '<div class="home-grid">' + tiles.map(function(t){
-      return '<button type="button" class="home-tile' + (t.moi ? ' moi' : '') + '" data-act="' + t.act + '"><span class="ic">' + svg(t.ic) + '</span><span class="tx"><span class="nm">' + t.ten + '</span><span class="sub">' + t.sub + '</span></span></button>';
-    }).join('') + '</div>' +
-    '<div style="text-align:center"><button type="button" class="home-vao" data-act="vao">Vào form nhập liệu →</button></div>' +
-    '<div class="home-foot">Ngọc Long Energy × Quỹ Stride · Phiên bản '+VER+'</div></div>';
+    '<div class="home-grid">' + chinh.map(function(t){ return nut(t, true); }).join('') + '</div>' +
+    '<div class="home-nhom">Hồ sơ &amp; công cụ' + (soHs ? ' · ' + soHs + ' hồ sơ đã lưu' : '') + '</div>' +
+    '<div class="home-grid">' + tiles.map(function(t){ return nut(t, false); }).join('') + '</div>' +
+    '<div class="home-foot">Phiên bản ' + VER + ' · <button type="button" id="homeKt" data-act="ktcn">⟳ Kiểm tra cập nhật</button></div></div>';
   document.body.insertBefore(h, document.body.firstChild);
   h.addEventListener('click', function(e){
     var b = e.target.closest('[data-act]'); if (!b) return;
     var act = b.getAttribute('data-act');
-    if (act === 'vao') { hienTrangChu(true); return; }
+    if (act === 'chiase') { chiaSeUngDung(); return; }
+    if (act === 'ktcn') { kiemTraBanMoi(true); return; }
+    if (act === 'taimoi') { $('nlCapNhatTai').click(); return; }
     if (act === 'tiep') { try { var d = LS.get('cn_ban_nhap_v1'); if (d) applySnapshot(d); } catch (e) {} update(); hienTrangChu(true); showStep('s1'); return; }
     if (act === 'moi-gop' || act === 'moi-thang') {
       if (!khachMoi(act === 'moi-gop' ? 'tra_gop' : 'tra_thang')) return;
@@ -3072,11 +3199,83 @@ function xayTrangChu(){
     hienTrangChu(true);
     if (act === 'hoso') showStep('sHoSo');
     if (act === 'caidat') showStep('sCaiDat');
+    if (act === 'huongdan') showStep('sHuongDan');
   });
   document.addEventListener('click', function(e){
     if (e.target.closest('[data-home]')) hienTrangChu(false);
   });
 }
+
+
+/* ---------- Cập nhật phiên bản, chia sẻ, hướng dẫn ---------- */
+function soSanhBan(a, b){
+  var x = String(a).split('.').map(Number), y = String(b).split('.').map(Number);
+  for (var i = 0; i < Math.max(x.length, y.length); i++) { var d = (x[i] || 0) - (y[i] || 0); if (d) return d > 0 ? 1 : -1; }
+  return 0;
+}
+function hienThanhCapNhat(ban){
+  $('nlCapNhatTx').textContent = 'Có phiên bản mới ' + ban + '. Bấm Tải lại để cập nhật (số liệu đang nhập vẫn được giữ).';
+  $('nlCapNhat').hidden = false;
+}
+function kiemTraBanMoi(thuCong){
+  var tt = $('cdCapNhatTt');
+  if (thuCong) toast('Đang kiểm tra phiên bản mới...');
+  return fetch(APP_URL + '?_=' + Date.now(), {cache: 'no-store'}).then(function(r){
+    if (!r.ok) throw new Error('http ' + r.status);
+    return r.text();
+  }).then(function(t){
+    var m = /name="nd-version" content="([^"]+)"/.exec(t);
+    if (!m) throw new Error('khong thay phien ban');
+    LS.set('cn_cap_nhat_lan', Date.now());
+    if (soSanhBan(m[1], VER) > 0) {
+      hienThanhCapNhat(m[1]);
+      var hk = $('homeKt'); if (hk) { hk.textContent = '⬆ Có bản mới ' + m[1] + ', bấm để tải lại'; hk.setAttribute('data-act','taimoi'); hk.style.color = '#ffa726'; }
+      if (tt) tt.textContent = 'Có bản mới ' + m[1];
+      if (thuCong) toast('Có phiên bản mới ' + m[1]);
+    } else {
+      $('nlCapNhat').hidden = true;
+      if (tt) tt.textContent = 'Đang dùng bản mới nhất';
+      if (thuCong) toast('Bạn đang dùng bản mới nhất');
+    }
+  }).catch(function(){
+    if (tt) tt.textContent = 'Không kiểm tra được';
+    if (thuCong) toast('Không kiểm tra được. Kiểm tra mạng rồi thử lại.');
+  });
+}
+$('nlCapNhatDong').addEventListener('click', function(){ $('nlCapNhat').hidden = true; });
+$('nlCapNhatTai').addEventListener('click', function(){
+  var xong = function(){ location.reload(); };
+  if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+    navigator.serviceWorker.getRegistrations().then(function(rs){ return Promise.all(rs.map(function(r){ return r.update(); })); }).then(xong, xong);
+  } else xong();
+});
+$('btnKtCapNhat').addEventListener('click', function(){ kiemTraBanMoi(true); });
+function chiaSeUngDung(){
+  var du = {title: 'Đề xuất đầu tư điện mặt trời hệ công nghiệp', text: 'Ứng dụng lập đề xuất điện mặt trời hệ công nghiệp, Ngọc Long Energy × Quỹ Stride', url: APP_URL};
+  if (navigator.share) { navigator.share(du).catch(function(){}); return; }
+  var xong = function(){ toast('Đã sao chép liên kết ứng dụng'); };
+  var duPhong = function(){
+    try {
+      var ta = document.createElement('textarea'); ta.value = APP_URL; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); document.body.removeChild(ta);
+      if (ok) { xong(); return; }
+    } catch (e) {}
+    toast('Liên kết: ' + APP_URL);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(APP_URL).then(xong, duPhong); else duPhong();
+}
+$('btnChiaSe').addEventListener('click', chiaSeUngDung);
+$('hdTabs').addEventListener('click', function(e){
+  var c = e.target.closest('.chip'); if (!c) return;
+  var v = c.getAttribute('data-hd');
+  Array.prototype.forEach.call($('hdTabs').children, function(x){ x.classList.toggle('on', x === c); });
+  Array.prototype.forEach.call(document.querySelectorAll('.hd-pane'), function(p){ p.hidden = p.getAttribute('data-hd') !== v; });
+});
+(function tuKiemTra(){
+  if (!/^https?:$/.test(location.protocol)) return;
+  var lan = LS.get('cn_cap_nhat_lan');
+  if (!lan || Date.now() - lan > 864e5) setTimeout(function(){ kiemTraBanMoi(false); }, 2500);
+})();
 
 /* ---------- Khởi động ---------- */
 $('verTxt').textContent = VER;
