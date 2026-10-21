@@ -169,11 +169,11 @@ td input{padding:6px 7px;font-size:13px}
       <div><label for="tienDien">Tiền điện trung bình tháng (đã gồm VAT)</label><div class="suf"><input id="tienDien" inputmode="numeric"><span>đ</span></div></div>
       <div><label for="giaDien">Giá điện bình quân</label><div class="suf"><input id="giaDien" inputmode="numeric"><span>đ/kWh</span></div></div>
       <div><label for="gio">Giờ nắng đỉnh / ngày</label>
-        <select id="gio"><option value="3">3</option><option value="3.5">3,5</option><option value="4">4</option><option value="4.5">4,5</option></select>
+        <div class="suf"><input id="gio" inputmode="decimal"><span>giờ</span></div>
         <div class="muted" id="gioHint"></div>
       </div>
       <div><label for="tyLe">Tỷ lệ điện dùng ban ngày</label><div class="suf"><input id="tyLe" inputmode="numeric"><span>%</span></div>
-        <div class="muted">Nhập theo khách (ca làm việc, giờ sản xuất).</div></div>
+        <div class="muted" id="tyLeHint"></div></div>
     </div>
     <div class="sep"></div>
     <label>Gợi ý giá điện theo nhịp vận hành</label>
@@ -342,9 +342,6 @@ td input{padding:6px 7px;font-size:13px}
     <h2>Cài đặt quản lý</h2>
     <p class="hint">Chỉ quản lý chỉnh. Thay đổi lưu trên trình duyệt này.</p>
     <div class="grid three">
-      <div><label>Giờ nắng mặc định — Miền Bắc</label><input id="cdGioBac" inputmode="decimal"></div>
-      <div><label>Giờ nắng mặc định — Miền Trung</label><input id="cdGioTrung" inputmode="decimal"></div>
-      <div><label>Giờ nắng mặc định — Miền Nam</label><input id="cdGioNam" inputmode="decimal"></div>
       <div><label>Hiệu suất hệ thống (PR)</label><input id="cdPR" inputmode="decimal"></div>
       <div><label>Tỷ lệ pin/biến tần</label><input id="cdTyLeBT" inputmode="decimal"></div>
       <div><label>Độ sâu xả pin (DoD)</label><input id="cdDoD" inputmode="decimal"></div>
@@ -2231,7 +2228,7 @@ function kep(v,lo,hi,def){ var x=Number(v); return (isFinite(x) && x>=lo && x<=h
 function hopNhatCD(raw){
   var d = JSON.parse(JSON.stringify(CD_MAC_DINH));
   if (!raw || typeof raw !== 'object') return d;
-  var g = raw.gio || {};
+  var g = {}; // giờ nắng mặc định theo khu vực cố định trong mã, không còn chỉnh ở Cài đặt
   d.gio = {bac:kep(g.bac,1,8,3), trung:kep(g.trung,1,8,4), nam:kep(g.nam,1,8,4.5)};
   var h = raw.heSo || {};
   d.heSo = {
@@ -2272,6 +2269,7 @@ var cd = hopNhatCD(LS.get('cn_cai_dat_v1'));
 var mo = 'hybrid', ht = 'tra_gop', goi = '5';
 var gLoai = 'kinhdoanh', gCap = 'duoi6', gNhip = 'hanhchinh';
 var giaTay = false; // true: khách/nhân viên đã gõ giá tay, không tự điền theo nhịp nữa
+var tyLeTay = false; // true: đã gõ tỷ lệ ban ngày tay, không tự gợi ý theo nhịp nữa
 var gKhung = 'cu', gSoChu = 2; // khung giờ cao điểm (cu/moi) và số chu kỳ sạc/xả BESS mỗi ngày
 var manual = {kwp:null, inv:null, luu:null, baoTri:null, phi:null};
 var bangKe = [];
@@ -2372,6 +2370,7 @@ function canhBao(R){
   if (!s.tongGiaTri) add('bat','Chưa nhập tổng giá trị dự án.');
   if (!s.tienDien || !s.giaDien) add('bat','Chưa nhập tiền điện hoặc giá điện.');
   if (!s.tyLe) add('thieu','Chưa nhập tỷ lệ điện dùng ban ngày (bắt buộc để tính công suất).');
+  if (s.gio && (s.gio < 2 || s.gio > 6)) add('thieu','Giờ nắng đỉnh ngoài khoảng 2–6 giờ, kiểm tra lại.');
   if (!s.khach) add('thieu','Chưa nhập tên khách hàng (sẽ in trên PDF).');
   if (s.tienDien && s.tienDien < 100000) add('thieu','Tiền điện dưới 100.000 đ — kiểm tra lại.');
   if (s.tienDien > 100000000) add('thieu','Tiền điện trên 100 triệu đ/tháng — kiểm tra lại.');
@@ -2403,7 +2402,7 @@ function renderIdx(){
   ) : '<span class="muted">Nhập tiền điện, giá điện và tỷ lệ điện ban ngày để tính công suất.</span>';
 
   var gioMap = {bac:'Miền Bắc', trung:'Miền Trung', nam:'Miền Nam'};
-  $('gioHint').textContent = 'Mặc định ' + gioMap[$('khuVuc').value] + ': ' + cd.gio[$('khuVuc').value] + ' giờ nắng đỉnh. Có thể chọn 3 / 3,5 / 4 / 4,5.';
+  $('gioHint').textContent = 'Mặc định ' + gioMap[$('khuVuc').value] + ': ' + cd.gio[$('khuVuc').value] + ' giờ. Có thể nhập tay.';
 
   var s=R.s;
   var kmTxt;
@@ -2503,7 +2502,7 @@ function renderBk(){
 /* ---------- Lưu nháp ---------- */
 var DRAFT_IDS = ['khach','diaChi','duAn','khuVuc','viTri','dienTich','tienDien','giaDien','gio','tyLe','tongGiaTri','ngayKy','kmMode','thangDaVay','soDon','mucDich'];
 function snapshot(){
-  var o = {ids:{}, mo:mo, ht:ht, goi:goi, manual:manual, bangKe:bangKe, loai:gLoai, cap:gCap, nhip:gNhip, giaTay:giaTay, khung:gKhung, soChu:gSoChu};
+  var o = {ids:{}, mo:mo, ht:ht, goi:goi, manual:manual, bangKe:bangKe, loai:gLoai, cap:gCap, nhip:gNhip, giaTay:giaTay, tyLeTay:tyLeTay, khung:gKhung, soChu:gSoChu};
   DRAFT_IDS.forEach(function(id){ o.ids[id] = $(id).value; });
   return o;
 }
@@ -2518,6 +2517,7 @@ function applySnapshot(o){
   gCap = Calc.dsCapDienAp(gLoai).some(function(x){ return x.key===o.cap; }) ? o.cap : Calc.BIEU_GIA[gLoai].macDinh;
   gNhip = (o.nhip && cd.nhip[o.nhip]) ? o.nhip : 'hanhchinh';
   giaTay = (o.giaTay===undefined) ? !!ids.giaDien : o.giaTay===true;
+  tyLeTay = (o.tyLeTay===undefined) ? !!ids.tyLe : o.tyLeTay===true;
   gKhung = o.khung==='moi' ? 'moi' : 'cu';
   gSoChu = gKhung==='moi' ? 1 : (Number(o.soChu)===1 ? 1 : 2);
   manual = {baoTri: Array.isArray((o.manual||{}).baoTri) ? o.manual.baoTri.slice(0,7) : null,
@@ -2566,6 +2566,15 @@ function syncGoiY(){
   $('giaGoiY').value = gia ? fmtIn(Math.round(gia)) : '';
   if (!giaTay && gia && document.activeElement !== $('giaDien')) $('giaDien').value = fmtIn(Math.round(gia));
   $('giaTrangThai').textContent = giaTay ? 'Đang dùng giá nhập tay ở ô Giá điện bình quân.' : 'Giá điện đang tự điền theo nhịp. Gõ vào ô Giá điện để dùng giá khác.';
+  var pTL = cd.nhip[gNhip] || Calc.NHIP_MAC_DINH[gNhip];
+  if (khongNhip || !pTL) {
+    $('tyLeHint').textContent = 'Nhập theo khách (ca làm việc, giờ sản xuất).';
+  } else {
+    if (!tyLeTay && document.activeElement !== $('tyLe')) $('tyLe').value = String(pTL.bt);
+    $('tyLeHint').innerHTML = tyLeTay
+      ? 'Đang nhập tay. Gợi ý theo nhịp: <b>' + pTL.bt + '%</b> giờ bình thường. <button type="button" id="btnDungTyLe">Dùng gợi ý</button>'
+      : 'Gợi ý theo nhịp ' + Calc.NHIP_MAC_DINH[gNhip].ten + ': <b>' + pTL.bt + '%</b> giờ bình thường. Gõ vào ô để nhập tay.';
+  }
   var tien = pInt($('tienDien').value), giaNhap = pInt($('giaDien').value), tyLe = pDec($('tyLe').value) / 100;
   var h = '';
   if (tien && giaNhap) {
@@ -2586,6 +2595,10 @@ $('btnDungGiaGoiY').addEventListener('click', function(){
 });
 $('khungGio').addEventListener('change', function(){ gKhung = this.value; if (gKhung === 'moi') gSoChu = 1; update(); });
 $('soChu').addEventListener('change', function(){ gSoChu = Number(this.value); update(); });
+$('tyLe').addEventListener('input', function(){ tyLeTay = this.value.trim() !== ''; update(); });
+document.addEventListener('click', function(e){
+  if (e.target && e.target.id === 'btnDungTyLe') { tyLeTay = false; update(); toast('Đã dùng tỷ lệ gợi ý theo nhịp'); }
+});
 $('giaDien').addEventListener('input', function(){
   giaTay = this.value.trim() !== '';
   if (giaTay) update();
@@ -2936,7 +2949,6 @@ function renderCaiDat(){
       '</div><div class="muted" data-sum="'+k+'"></div></div>';
   }).join('');
   refreshSumNhip();
-  $('cdGioBac').value = cd.gio.bac; $('cdGioTrung').value = cd.gio.trung; $('cdGioNam').value = cd.gio.nam;
   $('cdPR').value = cd.heSo.hieuSuatHeThong; $('cdTyLeBT').value = cd.heSo.tyLePinBienTan;
   $('cdDoD').value = cd.heSo.doSauXa; $('cdHSNX').value = cd.heSo.hieuSuatNapXa; $('cdBuoc').value = cd.heSo.buocLuuTru;
   $('cdCongTy').value = cd.congTy; $('cdHotline').value = cd.hotline; $('cdWeb').value = cd.web;
@@ -2980,7 +2992,6 @@ $('btnLuuCaiDat').addEventListener('click', function(){
   var raw = {
     nhip: nhipRaw,
     bess: {cu: bessRaw.cu, moi: bessRaw.moi, suyHao: pDec($('cdBessSuy').value), cRateMax: pDec($('cdBessC').value), chuKyBaoHanhNgay: pDec($('cdBessBH').value), donGiaKwh: pInt($('cdBessGia').value)},
-    gio: {bac:$('cdGioBac').value, trung:$('cdGioTrung').value, nam:$('cdGioNam').value},
     heSo: {hieuSuatHeThong:$('cdPR').value, tyLePinBienTan:$('cdTyLeBT').value, doSauXa:$('cdDoD').value, hieuSuatNapXa:$('cdHSNX').value, buocLuuTru:$('cdBuoc').value},
     baoTri: Array.prototype.map.call(document.querySelectorAll('[data-bt]'), function(el){ return pDec(el.value); }),
     congTy: $('cdCongTy').value, hotline: $('cdHotline').value, web: $('cdWeb').value,
@@ -3003,7 +3014,7 @@ function khachMoi(ht){
   if (dangNhap && !confirm('Bắt đầu báo giá khách mới? Số liệu đang nhập trên màn hình sẽ bị xoá (hồ sơ đã lưu vẫn giữ).')) return false;
   var ids = {}; DRAFT_IDS.forEach(function(id){ ids[id] = ''; });
   ids.soDon = '01'; ids.khuVuc = $('khuVuc').value; ids.kmMode = 'auto';
-  applySnapshot({ids: ids, mo: 'hybrid', ht: ht, goi: '5', manual: {}, bangKe: [], loai: 'kinhdoanh', cap: 'duoi6', nhip: 'hanhchinh', giaTay: false, khung: 'cu', soChu: 2});
+  applySnapshot({ids: ids, mo: 'hybrid', ht: ht, goi: '5', manual: {}, bangKe: [], loai: 'kinhdoanh', cap: 'duoi6', nhip: 'hanhchinh', giaTay: false, tyLeTay: false, khung: 'cu', soChu: 2});
   $('gio').value = String(cd.gio[$('khuVuc').value]);
   update();
   return true;
@@ -3075,7 +3086,7 @@ xayTrangChu();
     ids: {khach:'Công ty cổ phần Duyên Hải Quảng Ninh', diaChi:'Số 39A, đường Hữu Nghị, Phường Móng Cái 1, Tỉnh Quảng Ninh',
       duAn:'Dự án điện mặt trời mái nhà có lưu trữ', khuVuc:'bac', viTri:'Áp mái tôn', dienTich:'2.400',
       tienDien:'150.000.000', giaDien:'3.614', gio:'3', tyLe:'60', tongGiaTri:'4.800.000.000', ngayKy:'', kmMode:'auto', thangDaVay:'', soDon:'01', mucDich:''},
-    mo:'hybrid', ht:'tra_gop', goi:'5', manual:{}, bangKe:[], giaTay:true
+    mo:'hybrid', ht:'tra_gop', goi:'5', manual:{}, bangKe:[], giaTay:true, tyLeTay:true
   };
   var draft = LS.get('cn_ban_nhap_v1');
   if (!(draft && applySnapshot(draft))) applySnapshot(sample);
